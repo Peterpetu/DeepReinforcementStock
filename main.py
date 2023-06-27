@@ -5,7 +5,7 @@ import torch as torch
 
 def main():
     # Load preprocessed data
-    data = np.load('preprocessed_data.npy')
+    data = np.load('ibm.us_train.npy')
 
     # Create environment
     env = StockTradingEnvironment(data)

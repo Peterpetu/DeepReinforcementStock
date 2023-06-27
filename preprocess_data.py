@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def preprocess_data(csv_filename, window_size=10):
+def preprocess_data(csv_filename, window_size=30):
     # Load the data
     data = pd.read_csv(csv_filename)
 
@@ -17,7 +17,7 @@ def preprocess_data(csv_filename, window_size=10):
     scaler = StandardScaler()
     data = pd.DataFrame(scaler.fit_transform(data), columns=data.columns)
 
-    # Create windows
+    # Create windows of data
     windows = []
     for i in range(len(data) - window_size + 1):
         windows.append(data.iloc[i:i+window_size].values)
@@ -34,5 +34,5 @@ def preprocess_data(csv_filename, window_size=10):
 
     print(f"Preprocessed data saved to {csv_filename.replace('.csv', '_train.npy')} and {csv_filename.replace('.csv', '_test.npy')}")
 
-# Usage
-preprocess_data('ibm.us.csv')
+if __name__ == "__main__":
+    preprocess_data('ibm.us.csv')
