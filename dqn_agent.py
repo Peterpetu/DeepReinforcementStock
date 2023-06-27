@@ -32,11 +32,11 @@ class DQNAgent:
         self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
-    
+
     def step(self, state, action, reward, next_state, done):
         # Save experience in replay memory
         self.memory.add(state, action, reward, next_state, done)
-        
+
         # Learn every UPDATE_EVERY time steps.
         self.t_step = (self.t_step + 1) % UPDATE_EVERY
         if self.t_step == 0:
@@ -79,6 +79,10 @@ class DQNAgent:
         # ------------------- update target network ------------------- #
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)                     
 
+    def soft_update(self, local_model, target_model, tau):
+        for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
+            target_param.data.copy_(tau*local_param.data + (1.0-tau)*target_param.data)
+
 
 class ReplayBuffer:
     def __init__(self, action_size, buffer_size, batch_size, seed):
@@ -108,4 +112,3 @@ class ReplayBuffer:
     
     def clear_memory(self):
         self.memory.clear()
-

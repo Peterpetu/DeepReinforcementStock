@@ -10,7 +10,7 @@ class Environment:
         self.initial_balance = initial_balance
         self.done = False
         self.window_size = window_size
-        self.state_size = self.window_size * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
+        self.state_size = self.window_size * 2 * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
         self.action_size = 2  # buy, sell
 
     def step(self, action):
@@ -60,18 +60,14 @@ class Environment:
     def state(self):
         # Get the most recent n days' stock prices and trading volumes
         recent_prices_volumes = self.get_recent_prices_volumes(n=self.window_size)
-    
+
         # Flatten the recent_prices_volumes array
         recent_prices_volumes = recent_prices_volumes.flatten()
-    
+
         # Construct the state vector
         state = np.concatenate((recent_prices_volumes, [self.stock_owned, self.balance]))
-    
-        return state
 
-    @property
-    def current_price(self):
-        return self.stock_price_history[self.current_step]
+        return state
 
     def buy_stock(self):
         shares_to_buy = self.balance // self.current_price
@@ -81,5 +77,8 @@ class Environment:
         self.balance -= shares_to_buy * self.current_price
 
     def sell_stock(self):
+        if self.stock_owned <= 0:
+            return
         self.balance += self.stock_owned * self.current_price
         self.stock_owned = 0
+
