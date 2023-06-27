@@ -1,16 +1,16 @@
 import numpy as np
-
-def __init__(self, stock_price_history, initial_balance=10000, window_size=30):
-    self.stock_price_history = np.array(stock_price_history)
-    self.n_steps = len(self.stock_price_history)
-    self.current_step = 0
-    self.stock_owned = 0
-    self.balance = initial_balance
-    self.initial_balance = initial_balance
-    self.done = False
-    self.window_size = window_size
-    self.state_size = self.window_size * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
-    self.action_size = 2  # buy, sell
+class Environment:
+    def __init__(self, stock_price_history, initial_balance=10000, window_size=30):
+        self.stock_price_history = np.array(stock_price_history)
+        self.n_steps = len(self.stock_price_history)
+        self.current_step = 0
+        self.stock_owned = 0
+        self.balance = initial_balance
+        self.initial_balance = initial_balance
+        self.done = False
+        self.window_size = window_size
+        self.state_size = self.window_size * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
+        self.action_size = 2  # buy, sell
 
     def step(self, action):
         assert self.action_space.contains(action)
@@ -42,7 +42,7 @@ def __init__(self, stock_price_history, initial_balance=10000, window_size=30):
     # Flatten the array into a one-dimensional array
         recent_prices_volumes = recent_prices_volumes.flatten()
     
-    return recent_prices_volumes
+        return recent_prices_volumes
 
 
     @property
