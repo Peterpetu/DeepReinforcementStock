@@ -23,7 +23,7 @@ def main():
     for i_episode in range(1, n_episodes+1):
         # Reset the environment and the agent
         state = env.reset()
-        agent.reset()
+        
 
         done = False
         total_reward = 0
