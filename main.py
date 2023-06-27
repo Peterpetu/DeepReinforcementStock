@@ -35,8 +35,8 @@ def main():
             while not done:
                 action = agent.act(state)
                 step_counter += 1
-                if step_counter % 100 == 0:  # Only print every 100 steps
-                    print(f"Current state: {state}, Action taken: {action}")
+                if step_counter % 1000 == 0:  # Only print every 1000 steps
+                    print(f" Action taken: {action}")
             next_state, reward, done, _ = env.step(action)
             agent.step(state, action, reward, next_state, done)
             state = next_state
