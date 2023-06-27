@@ -7,9 +7,10 @@ class Environment:
         self.current_step = 0
         self.stock_owned = 0
         self.balance = initial_balance
+        self.initial_balance = initial_balance
         self.done = False
         self.window_size = window_size
-        self.state_size = self.window_size + 2  # Added this line
+        self.state_size = self.window_size + 2
         self.action_size = 2
 
     def step(self, action):
