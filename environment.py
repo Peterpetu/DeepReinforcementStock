@@ -37,15 +37,13 @@ class Environment:
     
     def get_recent_prices_volumes(self, n):
     # Get the most recent n days' stock prices and trading volumes
-        recent_prices_volumes = self.stock_price_history[-n:]
-    
+        recent_prices_volumes = self.stock_price_history[-n:, :2]  # Get only the first two columns (price and volume)
+
     # Ensure the array is of the correct size
         assert recent_prices_volumes.shape == (n, 2), f"Expected shape ({n}, 2), got {recent_prices_volumes.shape}"
-    
-    # Flatten the array into a one-dimensional array
-        recent_prices_volumes = recent_prices_volumes.flatten()
-    
+
         return recent_prices_volumes
+
 
 
 
