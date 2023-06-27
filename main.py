@@ -20,6 +20,12 @@ def main():
     # Initialize the list to store total rewards per episode
     total_rewards = []
 
+    # Epsilon parameters
+    eps_start = 1.0
+    eps_end = 0.01
+    eps_decay = 0.995
+    eps = eps_start
+
     for i_episode in range(1, n_episodes+1):
         # Reset the environment and the agent
         state = env.reset()
@@ -27,16 +33,12 @@ def main():
         done = False
         total_reward = 0
         step_counter = 0
-        
-        for i_episode in range(1, n_episodes+1):
-            state = env.reset()
-            done = False
-            total_reward = 0
-            while not done:
-                action = agent.act(state)
-                step_counter += 1
-                if step_counter % 1000 == 0:  # Only print every 1000 steps
-                    print(f" Action taken: {action}")
+
+        while not done:
+            action = agent.act(state, eps)
+            step_counter += 1
+            if step_counter % 1000 == 0:  # Only print every 1000 steps
+                print(f" Action taken: {action}")
             next_state, reward, done, _ = env.step(action)
             agent.step(state, action, reward, next_state, done)
             state = next_state
@@ -44,9 +46,11 @@ def main():
             if i_episode % 10 == 0:  # Only print every 10 episodes
                 print(f"Episode {i_episode}/{n_episodes} finished. Total reward: {total_reward}")
 
-
         # Append total reward of this episode to the list
         total_rewards.append(total_reward)
+
+        # Decrease epsilon
+        eps = max(eps_end, eps_decay*eps)
 
         # Print out some information about the training process
         print(f"Episode {i_episode}/{n_episodes} finished. Total reward: {total_reward}")

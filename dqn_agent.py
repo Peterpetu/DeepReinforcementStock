@@ -52,11 +52,19 @@ class DQNAgent:
             action_values = self.qnetwork_local(state)
         self.qnetwork_local.train()
 
-        # Epsilon-greedy action selection
+        print(f"Epsilon: {eps}")
+        print(f"Action values: {action_values.cpu().data.numpy()}")
+
+    # Epsilon-greedy action selection
         if random.random() > eps:
-            return np.argmax(action_values.cpu().data.numpy())
+            action = np.argmax(action_values.cpu().data.numpy())
+            print(f"Action selected (greedy): {action}")
+            return action
         else:
-            return random.choice(np.arange(self.action_size))
+            action = random.choice(np.arange(self.action_size))
+            print(f"Action selected (random): {action}")
+            return action
+
 
     def learn(self, experiences, gamma):
         states, actions, rewards, next_states, dones = experiences
