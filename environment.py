@@ -15,6 +15,8 @@ class Environment:
     
 
     def step(self, action):
+        if self.current_step >= len(self.stock_price_history):
+            self.current_step = 0
         self.current_price = self.stock_price_history[self.current_step, 0, 0]
         assert 0 <= action < self.action_size, f"Invalid action: {action}"
         if self.done:
