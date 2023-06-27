@@ -30,6 +30,7 @@ def main():
         while not done:
             # Agent takes action
             action = agent.act(state)
+            print(f"Current state: {state}, Action taken: {action}")
 
             # Get the next state, reward, and done from the environment
             next_state, reward, done, _ = env.step(action)
@@ -40,6 +41,7 @@ def main():
             state = next_state
 
             total_reward += reward
+            print(f"Total reward so far: {total_reward}")
 
         # Append total reward of this episode to the list
         total_rewards.append(total_reward)
