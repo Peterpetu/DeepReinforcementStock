@@ -30,10 +30,18 @@ class Environment:
         return next_state, reward, self.done, {}
 
     def reset(self):
-        self.stock_owned = 0
-        self.balance = self.initial_balance
+        self.current_step = self.window_size
         self.done = False
-        self.current_step = 0
+        self.profits = 0
+        self.positions = []
+        self.position_value = 0
+        self.cost_basis = 0
+        self.balance = self.initial_balance
+        self.net_worth = self.initial_balance
+        self.max_net_worth = self.initial_balance
+        self.trades = []
+        # Only include the last window of data in the state
+        self.stock_price_history = self.stock_price_history[-1]
         return self.state
 
     def get_recent_prices_volumes(self, n):
