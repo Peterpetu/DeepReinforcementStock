@@ -28,10 +28,12 @@ class Environment:
         self.current_step += 1
         if self.current_step >= self.n_steps:
             self.done = True
+            self.current_step = 0  # Reset current_step to 0 when it reaches the size of stock_price_history
         next_state = self.state
         reward = self.balance + self.stock_owned * self.current_price - self.previous_asset_value
         self.previous_asset_value = self.balance + self.stock_owned * self.current_price
         return next_state, reward, self.done, {}
+
 
     def reset(self):
         self.current_step = self.window_size
