@@ -10,6 +10,7 @@ class Environment:
         self.done = False
         self.window_size = window_size
         self.state_size = self.window_size + 2  # Added this line
+        self.action_size = 2
 
     def step(self, action):
         assert self.action_space.contains(action)
