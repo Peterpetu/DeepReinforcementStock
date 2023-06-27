@@ -12,8 +12,10 @@ class Environment:
         self.window_size = window_size
         self.state_size = self.window_size * 10 * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
         self.action_size = 2  # buy, sell
+    
 
     def step(self, action):
+        self.current_price = self.stock_price_history[self.current_step, 0, 0]
         assert 0 <= action < self.action_size, f"Invalid action: {action}"
         if self.done:
             return self.state, 0, self.done, {}
