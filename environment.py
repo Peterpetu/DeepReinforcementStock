@@ -30,7 +30,7 @@ class Environment:
 
     def reset(self):
         self.stock_owned = 0
-        self.balance = initial_balance
+        self.balance = self.initial_balance
         self.done = False
         self.current_step = 0
         return self.state
