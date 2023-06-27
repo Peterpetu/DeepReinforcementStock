@@ -14,13 +14,15 @@ class Environment:
         self.action_size = 2  # buy, sell
 
     def step(self, action):
-        assert self.action_size.contains(action)
+        assert 0 <= action < self.action_size, f"Invalid action: {action}"
         if self.done:
             return self.state, 0, self.done, {}
         if action == 0:  # Buy
             self.buy_stock()
         elif action == 1:  # Sell
             self.sell_stock()
+        elif action == 2:  # Hold
+            pass  # Do nothing
         self.current_step += 1
         if self.current_step >= self.n_steps:
             self.done = True
