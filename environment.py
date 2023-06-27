@@ -35,10 +35,27 @@ class Environment:
         self.done = False
         self.current_step = 0
         return self.state
+    
+    def get_recent_prices_volumes(self, n):
+    # Get the most recent n days' stock prices and trading volumes
+        recent_prices_volumes = self.stock_price_history[-n:]
+    
+    # Flatten the array into a one-dimensional array
+        recent_prices_volumes = recent_prices_volumes.flatten()
+    
+        return recent_prices_volumes
+
 
     @property
     def state(self):
-        return np.append(self.stock_price_history[self.current_step - self.window_size:self.current_step], [self.stock_owned, self.balance])
+    # Get the most recent n days' stock prices and trading volumes
+        recent_prices_volumes = self.get_recent_prices_volumes(n=self.window_size)
+    
+    # Construct the state vector
+        state = np.concatenate((recent_prices_volumes, [self.stock_owned, self.balance]))
+    
+        return state
+
 
     @property
     def current_price(self):
