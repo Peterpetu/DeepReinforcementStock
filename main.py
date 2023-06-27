@@ -23,14 +23,16 @@ def main():
     for i_episode in range(1, n_episodes+1):
         # Reset the environment and the agent
         state = env.reset()
-        
 
         done = False
         total_reward = 0
+        step_counter = 0
         while not done:
             # Agent takes action
             action = agent.act(state)
-            print(f"Current state: {state}, Action taken: {action}")
+            step_counter += 1
+            if step_counter % 10 == 0:
+                print(f"Current state: {state}, Action taken: {action}")
 
             # Get the next state, reward, and done from the environment
             next_state, reward, done, _ = env.step(action)
@@ -41,7 +43,8 @@ def main():
             state = next_state
 
             total_reward += reward
-            print(f"Total reward so far: {total_reward}")
+            if step_counter % 10 == 0:
+                print(f"Total reward so far: {total_reward}")
 
         # Append total reward of this episode to the list
         total_rewards.append(total_reward)
