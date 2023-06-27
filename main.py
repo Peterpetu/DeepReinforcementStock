@@ -32,8 +32,7 @@ def main():
             action = agent.act(state)
 
             # Get the next state, reward, and done from the environment
-            next_state, reward, done = env.step(action)
-
+            next_state, reward, done, _ = env.step(action)
             # Agent learns from experience and updates Q-Network
             agent.step(state, action, reward, next_state, done)
 
