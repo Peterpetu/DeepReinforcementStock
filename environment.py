@@ -52,7 +52,8 @@ class Environment:
         recent_prices_volumes = self.stock_price_history[-n:, :, :2]  # Get only the first two columns (price and volume) for all windows
 
     # Ensure the array is of the correct size
-        assert recent_prices_volumes.shape == (n, self.window_size, 2), f"Expected shape ({n}, {self.window_size}, 2), got {recent_prices_volumes.shape}"
+        assert recent_prices_volumes.shape == (n, self.stock_price_history.shape[1], 2), f"Expected shape ({n}, {self.stock_price_history.shape[1]}, 2), got {recent_prices_volumes.shape}"
+
 
         return recent_prices_volumes
 
