@@ -45,16 +45,17 @@ class Environment:
         return self.state
 
     def get_recent_prices_volumes(self, n):
-        # Ensure stock_price_history is a 2D array
-        assert len(self.stock_price_history.shape) == 2, f"Expected stock_price_history to be a 2D array, got shape {self.stock_price_history.shape}"
+    # Ensure stock_price_history is a 3D array
+        assert len(self.stock_price_history.shape) == 3, f"Expected stock_price_history to be a 3D array, got shape {self.stock_price_history.shape}"
 
-        # Get the most recent n days' stock prices and trading volumes
-        recent_prices_volumes = self.stock_price_history[-n:, :2]  # Get only the first two columns (price and volume)
+    # Get the most recent n days' stock prices and trading volumes
+        recent_prices_volumes = self.stock_price_history[-n:, :, :2]  # Get only the first two columns (price and volume) for all windows
 
-        # Ensure the array is of the correct size
-        assert recent_prices_volumes.shape == (n, 2), f"Expected shape ({n}, 2), got {recent_prices_volumes.shape}"
+    # Ensure the array is of the correct size
+        assert recent_prices_volumes.shape == (n, self.window_size, 2), f"Expected shape ({n}, {self.window_size}, 2), got {recent_prices_volumes.shape}"
 
         return recent_prices_volumes
+
 
     @property
     def state(self):
