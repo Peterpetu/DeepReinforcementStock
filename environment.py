@@ -40,8 +40,8 @@ class Environment:
         self.net_worth = self.initial_balance
         self.max_net_worth = self.initial_balance
         self.trades = []
-        # Only include the last window of data in the state
-        self.stock_price_history = self.stock_price_history[-1]
+        # Only include the last n days' data in the state
+        self.stock_price_history = self.stock_price_history[-self.window_size:]
         return self.state
 
     def get_recent_prices_volumes(self, n):
