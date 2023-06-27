@@ -33,7 +33,7 @@ class Environment:
             self.current_step = 0  # Reset current_step to 0 when it reaches the size of stock_price_history
         next_state = self.state
         reward = self.balance + self.stock_owned * self.current_price - self.previous_asset_value
-        self.previous_asset_value = self.balance + self.stock_owned * self.current_price
+        self.previous_asset_value = self.balance + self.stock_owned * self.current_price  # Update previous_asset_value
         return next_state, reward, self.done, {}
 
 
@@ -48,6 +48,7 @@ class Environment:
         self.net_worth = self.initial_balance
         self.max_net_worth = self.initial_balance
         self.trades = []
+        self.previous_asset_value = self.balance
         # Only include the last n days' data in the state
         self.stock_price_history = self.stock_price_history[-self.window_size:]
         return self.state
