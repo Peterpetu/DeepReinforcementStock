@@ -22,6 +22,7 @@ def main():
         agent.reset()
 
         done = False
+        total_reward = 0
         while not done:
             # Agent takes action
             action = agent.act(state)
@@ -35,8 +36,10 @@ def main():
             # Update the current state
             state = next_state
 
+            total_reward += reward
+
         # Print out some information about the training process
-        print(f"Episode {i_episode}/{n_episodes} finished.")
+        print(f"Episode {i_episode}/{n_episodes} finished. Total reward: {total_reward}")
 
     # Save the trained Q-Network
     torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
