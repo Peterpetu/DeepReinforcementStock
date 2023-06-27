@@ -1,17 +1,18 @@
 import numpy as np
-from environment import Environment as StockTradingEnvironment
+from environment import Environment
 from dqn_agent import DQNAgent
 import torch as torch
 
 def main():
-    # Load preprocessed data
-    data = np.load('ibm.us_train.npy')
+    # Load the preprocessed data
+    train_data = np.load('ibm.us_train.npy')
+    test_data = np.load('ibm.us_test.npy')
 
-    # Create environment
-    env = StockTradingEnvironment(data)
+    # Create the environment
+    env = Environment(train_data)
 
-    # Create agent
-    agent = DQNAgent(state_size=env.state_size, action_size=env.action_size, seed=0)
+    # Create the agent
+    agent = DQNAgent(state_size=env.state_size, action_size=env.action_size, seed=0, hidden_layers=[64, 64])
 
     # Number of episodes to train for
     n_episodes = 1000
