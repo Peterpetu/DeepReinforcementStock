@@ -8,13 +8,23 @@ class QNetwork(nn.Module):
         input_size = state_size
 
         for hidden_size in hidden_layers:
-            self.layers.append(nn.Linear(input_size, hidden_size))
-            self.layers.append(activation())
-            input_size = hidden_size
+            try:
+                self.layers.append(nn.Linear(input_size, hidden_size))
+                self.layers.append(activation())
+                input_size = hidden_size
+            except Exception as e:
+                print(f"Error occurred while creating hidden layer: {e}")
 
-        self.layers.append(nn.Linear(input_size, action_size))
+        try:
+            self.layers.append(nn.Linear(input_size, action_size))
+        except Exception as e:
+            print(f"Error occurred while creating output layer: {e}")
 
     def forward(self, x):
-        for layer in self.layers:
-            x = layer(x)
-        return x
+        try:
+            for layer in self.layers:
+                x = layer(x)
+            return x
+        except Exception as e:
+            print(f"Error occurred during forward pass: {e}")
+            return None
