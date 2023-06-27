@@ -10,7 +10,7 @@ class Environment:
         self.initial_balance = initial_balance
         self.done = False
         self.window_size = window_size
-        self.state_size = self.window_size * 2 * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
+        self.state_size = self.window_size * 10 * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
         self.action_size = 2  # buy, sell
 
     def step(self, action):
