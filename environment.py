@@ -1,12 +1,15 @@
 import numpy as np
+
 class Environment:
-    def __init__(self, stock_price_history, initial_balance=10000):
+    def __init__(self, stock_price_history, initial_balance=10000, window_size=30):
         self.stock_price_history = stock_price_history
         self.n_steps = len(self.stock_price_history)
         self.current_step = 0
         self.stock_owned = 0
         self.balance = initial_balance
         self.done = False
+        self.window_size = window_size
+        self.state_size = self.window_size + 2  # Added this line
 
     def step(self, action):
         assert self.action_space.contains(action)
@@ -33,7 +36,7 @@ class Environment:
 
     @property
     def state(self):
-        return np.append(self.stock_price_history[self.current_step - self.n_past_days:self.current_step], [self.stock_owned, self.balance])
+        return np.append(self.stock_price_history[self.current_step - self.window_size:self.current_step], [self.stock_owned, self.balance])
 
     @property
     def current_price(self):
