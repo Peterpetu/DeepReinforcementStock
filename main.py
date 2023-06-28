@@ -2,6 +2,9 @@ import numpy as np
 from environment import Environment
 from dqn_agent import DQNAgent
 import torch as torch
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def main():
     # Load the preprocessed data
@@ -38,13 +41,13 @@ def main():
             action = agent.act(state, eps)
             step_counter += 1
             if step_counter % 1000 == 0:  # Only print every 1000 steps
-                print(f" Action taken: {action}")
+                logging.info(f"Step: {step_counter}, Action taken: {action}")
             next_state, reward, done, _ = env.step(action)
             agent.step(state, action, reward, next_state, done)
             state = next_state
             total_reward += reward
             if i_episode % 10 == 0:  # Only print every 10 episodes
-                print(f"Episode {i_episode}/{n_episodes} finished. Total reward: {total_reward}")
+                logging.info(f"Episode: {i_episode}, Total reward: {total_reward}")
 
         # Append total reward of this episode to the list
         total_rewards.append(total_reward)
@@ -53,13 +56,14 @@ def main():
         eps = max(eps_end, eps_decay*eps)
 
         # Print out some information about the training process
-        print(f"Episode {i_episode}/{n_episodes} finished. Total reward: {total_reward}")
+        logging.info(f"Episode: {i_episode}, Total reward: {total_reward}, Epsilon: {eps}")
 
     # Save the trained Q-Network
     torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
+    logging.info("Model saved.")
 
     # Evaluate the agent's performance
-    print("Evaluating agent's performance...")
+    logging.info("Evaluating agent's performance...")
     total_reward = 0
     state = env.reset()
     done = False
@@ -68,7 +72,7 @@ def main():
         next_state, reward, done = env.step(action)
         state = next_state
         total_reward += reward
-    print(f"Total reward: {total_reward}")
+    logging.info(f"Total reward: {total_reward}")
 
     # Save the total rewards per episode to a file
     np.save('total_rewards.npy', total_rewards)

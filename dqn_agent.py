@@ -34,7 +34,7 @@ class DQNAgent:
         self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
-         logging.info(f'Initialized DQNAgent with state_size={state_size}, action_size={action_size}, discount_factor={self.discount_factor}, learning_rate={self.learning_rate}, epsilon={self.epsilon}')
+        logging.info(f'Initialized DQNAgent with state_size={state_size}, action_size={action_size}')
 
 
     def step(self, state, action, reward, next_state, done):
@@ -56,19 +56,18 @@ class DQNAgent:
             action_values = self.qnetwork_local(state)
         self.qnetwork_local.train()
 
-        print(f"Epsilon: {eps}")
-        print(f"Action values: {action_values.cpu().data.numpy()}")
+        logging.info(f"Epsilon: {eps}")
+        logging.info(f"Action values: {action_values.cpu().data.numpy()}")
 
         # Epsilon-greedy action selection
         if random.random() > eps:
             action = np.argmax(action_values.cpu().data.numpy())
-            print(f"Action selected (greedy): {action}")
+            logging.info(f"Action selected (greedy): {action}")
             return action
         else:
             action = random.choice(np.arange(self.action_size))
-            print(f"Action selected (random): {action}")
+            logging.info(f"Action selected (random): {action}")
             return action
-
 
     def learn(self, experiences, gamma):
         states, actions, rewards, next_states, dones = experiences
@@ -83,17 +82,18 @@ class DQNAgent:
 
         # Compute loss
         loss = F.mse_loss(Q_expected, Q_targets)
+        logging.info(f"Loss: {loss.item()}")
+        
         # Minimize the loss
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
-
-        # ------------------- update target network ------------------- #
-        self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)         
+        self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)        
 
     def soft_update(self, local_model, target_model, tau):
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
             target_param.data.copy_(tau*local_param.data + (1.0-tau)*target_param.data)
+            logging.info("Target network updated.")
 
 
 class ReplayBuffer:
@@ -107,6 +107,7 @@ class ReplayBuffer:
     def add(self, state, action, reward, next_state, done):
         e = self.experience(state, action, reward, next_state, done)
         self.memory.append(e)
+        logging.info(f"Experience added: {e}")
     
     def sample(self):
         experiences = random.sample(self.memory, k=self.batch_size)
@@ -116,6 +117,7 @@ class ReplayBuffer:
         rewards = torch.from_numpy(np.vstack([e.reward for e in experiences if e is not None])).float().to(device)
         next_states = torch.from_numpy(np.vstack([e.next_state for e in experiences if e is not None])).float().to(device)
         dones = torch.from_numpy(np.vstack([e.done for e in experiences if e is not None]).astype(np.uint8)).float().to(device)
+        logging.info(f"Sampled {self.batch_size} experiences from memory.")
        
         return (states, actions, rewards, next_states, dones)
 
@@ -123,4 +125,5 @@ class ReplayBuffer:
         return len(self.memory)
     
     def clear_memory(self):
+        logging.info("Memory cleared.")
         self.memory.clear()

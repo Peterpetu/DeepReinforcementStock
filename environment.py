@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 class Environment:
     def __init__(self, stock_price_history, initial_balance=10000, window_size=30):
@@ -12,7 +13,7 @@ class Environment:
         self.window_size = window_size
         self.state_size = self.window_size * 10 * 2 + 2  # prices and volumes for window_size days, plus stock_owned and balance
         self.action_size = 3  # buy, sell, hold
-    
+        logging.info("Environment initialized.")
 
     def step(self, action):
         if self.current_step >= len(self.stock_price_history):
@@ -34,8 +35,8 @@ class Environment:
         next_state = self.state
         reward = self.balance + self.stock_owned * self.current_price - self.previous_asset_value
         self.previous_asset_value = self.balance + self.stock_owned * self.current_price  # Update previous_asset_value
+        logging.info(f"Action: {action}, Next state: {next_state}, Reward: {reward}, Done: {self.done}")
         return next_state, reward, self.done, {}
-
 
     def reset(self):
         self.current_step = self.window_size
@@ -51,18 +52,18 @@ class Environment:
         self.previous_asset_value = self.balance
         # Only include the last n days' data in the state
         self.stock_price_history = self.stock_price_history[-self.window_size:]
+        logging.info("Environment reset.")
         return self.state
 
     def get_recent_prices_volumes(self, n):
-    # Ensure stock_price_history is a 3D array
+        # Ensure stock_price_history is a 3D array
         assert len(self.stock_price_history.shape) == 3, f"Expected stock_price_history to be a 3D array, got shape {self.stock_price_history.shape}"
 
-    # Get the most recent n days' stock prices and trading volumes
+        # Get the most recent n days' stock prices and trading volumes
         recent_prices_volumes = self.stock_price_history[-n:, :, :2]  # Get only the first two columns (price and volume) for all windows
 
-    # Ensure the array is of the correct size
+        # Ensure the array is of the correct size
         assert recent_prices_volumes.shape == (n, self.stock_price_history.shape[1], 2), f"Expected shape ({n}, {self.stock_price_history.shape[1]}, 2), got {recent_prices_volumes.shape}"
-
 
         return recent_prices_volumes
 
