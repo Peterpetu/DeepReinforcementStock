@@ -18,7 +18,7 @@ UPDATE_EVERY = 4        # how often to update the network
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class DQNAgent:
-    def __init__(self, state_size, action_size, seed, hidden_layers):
+    def __init__(self, state_size, action_size=3, seed=0, hidden_layers=[64, 64]):
         self.state_size = state_size
         self.action_size = action_size
         self.seed = random.seed(seed)
@@ -32,6 +32,7 @@ class DQNAgent:
         self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
+
 
     def step(self, state, action, reward, next_state, done):
         # Save experience in replay memory
@@ -55,7 +56,7 @@ class DQNAgent:
         print(f"Epsilon: {eps}")
         print(f"Action values: {action_values.cpu().data.numpy()}")
 
-    # Epsilon-greedy action selection
+        # Epsilon-greedy action selection
         if random.random() > eps:
             action = np.argmax(action_values.cpu().data.numpy())
             print(f"Action selected (greedy): {action}")
@@ -85,7 +86,7 @@ class DQNAgent:
         self.optimizer.step()
 
         # ------------------- update target network ------------------- #
-        self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)                     
+        self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)         
 
     def soft_update(self, local_model, target_model, tau):
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
@@ -112,7 +113,7 @@ class ReplayBuffer:
         rewards = torch.from_numpy(np.vstack([e.reward for e in experiences if e is not None])).float().to(device)
         next_states = torch.from_numpy(np.vstack([e.next_state for e in experiences if e is not None])).float().to(device)
         dones = torch.from_numpy(np.vstack([e.done for e in experiences if e is not None]).astype(np.uint8)).float().to(device)
-  
+       
         return (states, actions, rewards, next_states, dones)
 
     def __len__(self):
