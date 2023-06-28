@@ -1,12 +1,14 @@
 import numpy as np
 import random
 from collections import namedtuple, deque
+import logging
 
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
 from model import QNetwork
+logging.basicConfig(level=logging.INFO)
 
 BUFFER_SIZE = int(1e5)  # replay buffer size
 BATCH_SIZE = 64         # minibatch size
@@ -32,6 +34,7 @@ class DQNAgent:
         self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
+         logging.info(f'Initialized DQNAgent with state_size={state_size}, action_size={action_size}, discount_factor={self.discount_factor}, learning_rate={self.learning_rate}, epsilon={self.epsilon}')
 
 
     def step(self, state, action, reward, next_state, done):
