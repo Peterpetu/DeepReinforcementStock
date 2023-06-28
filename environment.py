@@ -23,10 +23,13 @@ class Environment:
         if self.done:
             return self.state, 0, self.done, {}
         if action == 0:  # Buy
-            self.buy_stock()
+            shares_to_buy = self.buy_stock()
+            print(f"Buying {shares_to_buy} shares at price {self.current_price}. Balance: {self.balance}")
         elif action == 1:  # Sell
-            self.sell_stock()
+            shares_sold = self.sell_stock()
+            print(f"Selling {shares_sold} shares at price {self.current_price}. Balance: {self.balance}")
         elif action == 2:  # Hold
+            print(f"Holding stocks. Stocks owned: {self.stock_owned}. Balance: {self.balance}")
             pass  # Do nothing
         self.current_step += 1
         if self.current_step >= self.n_steps:
@@ -35,7 +38,7 @@ class Environment:
         next_state = self.state
         reward = self.balance + self.stock_owned * self.current_price - self.previous_asset_value
         self.previous_asset_value = self.balance + self.stock_owned * self.current_price  # Update previous_asset_value
-        logging.info(f"Action: {action}, Next state: {next_state}, Reward: {reward}, Done: {self.done}")
+        logging.info(f"Action: {action}, Reward: {reward}, Done: {self.done}")
         return next_state, reward, self.done, {}
 
     def reset(self):
@@ -84,13 +87,16 @@ class Environment:
     def buy_stock(self):
         shares_to_buy = self.balance // self.current_price
         if shares_to_buy < 1:
-            return
+            return 0
         self.stock_owned += shares_to_buy
         self.balance -= shares_to_buy * self.current_price
+        return shares_to_buy
 
     def sell_stock(self):
         if self.stock_owned <= 0:
-            return
+            return 0
+        shares_sold = self.stock_owned
         self.balance += self.stock_owned * self.current_price
         self.stock_owned = 0
+        return shares_sold
 

@@ -107,7 +107,7 @@ class ReplayBuffer:
     def add(self, state, action, reward, next_state, done):
         e = self.experience(state, action, reward, next_state, done)
         self.memory.append(e)
-        logging.info(f"Experience added: {e}")
+        logging.info(f"Experience added: {action},{reward}")
     
     def sample(self):
         experiences = random.sample(self.memory, k=self.batch_size)
