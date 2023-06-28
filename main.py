@@ -80,7 +80,7 @@ def main():
     done = False
     while not done:
         action = agent.act(state)
-        next_state, reward, done = env.step(action)
+        next_state, reward, done, _ = env.step(action)
         state = next_state
         total_reward += reward
     logging.info(f"Total reward: {total_reward}")

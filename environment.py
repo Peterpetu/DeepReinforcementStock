@@ -16,7 +16,12 @@ class Environment:
         logging.info("Environment initialized.")
 
     def step(self, action):
-        self.current_price = self.stock_price_history[self.current_step, 0, 0]
+        if self.current_step < len(self.stock_price_history):
+            self.current_price = self.stock_price_history[self.current_step, 0, 0]
+        if self.current_step >= 11240:
+        # End the episode
+            self.done = True
+
         assert 0 <= action < self.action_size, f"Invalid action: {action}"
         if self.done:
             return self.state, 0, self.done, {}
@@ -30,7 +35,7 @@ class Environment:
             print(f"Holding stocks. Stocks owned: {self.stock_owned}. Balance: {self.balance}")
             pass  # Do nothing
         self.current_step += 1
-        if self.current_step >= self.n_steps:
+        if self.current_step >= 11240:
             self.done = True
             if self.done:
                 return self.state, 0, self.done, {}
