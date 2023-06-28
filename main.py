@@ -13,12 +13,18 @@ def main():
 
     # Create the environment
     env = Environment(train_data)
+    total_steps = len(train_data)
+    steps_taken = 0
+    print(f"Starting new episode with {total_steps} steps.")
+
+
+    
 
     # Create the agent
     agent = DQNAgent(state_size=env.state_size, action_size=env.action_size, seed=0, hidden_layers=[64, 64])
 
     # Number of episodes to train for
-    n_episodes = 1000
+    n_episodes = 1
 
     # Initialize the list to store total rewards per episode
     total_rewards = []
@@ -39,7 +45,12 @@ def main():
 
         while not done:
             action = agent.act(state, eps)
+            steps_taken += 1
+            #if steps_taken >= 10000:
+            #    print("10000 steps taken, stopping execution.")
+            #    return
             step_counter += 1
+            print(step_counter)
             if step_counter % 1000 == 0:  # Only print every 1000 steps
                 logging.info(f"Step: {step_counter}, Action taken: {action}")
             next_state, reward, done, _ = env.step(action)

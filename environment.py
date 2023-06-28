@@ -16,8 +16,6 @@ class Environment:
         logging.info("Environment initialized.")
 
     def step(self, action):
-        if self.current_step >= len(self.stock_price_history):
-            self.current_step = 0
         self.current_price = self.stock_price_history[self.current_step, 0, 0]
         assert 0 <= action < self.action_size, f"Invalid action: {action}"
         if self.done:
@@ -34,7 +32,8 @@ class Environment:
         self.current_step += 1
         if self.current_step >= self.n_steps:
             self.done = True
-            self.current_step = 0  # Reset current_step to 0 when it reaches the size of stock_price_history
+            if self.done:
+                return self.state, 0, self.done, {}
         next_state = self.state
         reward = self.balance + self.stock_owned * self.current_price - self.previous_asset_value
         self.previous_asset_value = self.balance + self.stock_owned * self.current_price  # Update previous_asset_value
@@ -42,7 +41,7 @@ class Environment:
         return next_state, reward, self.done, {}
 
     def reset(self):
-        self.current_step = self.window_size
+        self.current_step = 0  # Reset current_step to 0
         self.done = False
         self.profits = 0
         self.positions = []
@@ -53,10 +52,11 @@ class Environment:
         self.max_net_worth = self.initial_balance
         self.trades = []
         self.previous_asset_value = self.balance
-        # Only include the last n days' data in the state
+    # Only include the last n days' data in the state
         self.stock_price_history = self.stock_price_history[-self.window_size:]
         logging.info("Environment reset.")
         return self.state
+
 
     def get_recent_prices_volumes(self, n):
         # Ensure stock_price_history is a 3D array
