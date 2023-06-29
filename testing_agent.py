@@ -37,8 +37,16 @@ def test_agent(env, agent):
         # Select an action
         action = agent.act(state)
 
+        # Print the current state and the selected action
+        print('State:', state)
+        print('Action:', action)
+
         # Take a step in the environment
         next_state, reward, done, _ = env.step(action)
+
+        # Print the reward and the next state
+        print('Reward:', reward)
+        print('Next state:', next_state)
 
         # Update the total rewards
         total_rewards += reward
@@ -55,4 +63,3 @@ if __name__ == "__main__":
     agent = create_agent(env)
     load_trained_model(agent)
     test_agent(env, agent)
-
