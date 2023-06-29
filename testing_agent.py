@@ -2,6 +2,7 @@ import numpy as np
 from environment import Environment
 from dqn_agent import DQNAgent
 import torch
+import matplotlib.pyplot as plt
 
 def load_test_data():
     # Load the testing data
@@ -37,16 +38,8 @@ def test_agent(env, agent):
         # Select an action
         action = agent.act(state)
 
-        # Print the current state and the selected action
-        print('State:', state)
-        print('Action:', action)
-
         # Take a step in the environment
         next_state, reward, done, _ = env.step(action)
-
-        # Print the reward and the next state
-        print('Reward:', reward)
-        print('Next state:', next_state)
 
         # Update the total rewards
         total_rewards += reward
@@ -54,12 +47,26 @@ def test_agent(env, agent):
         # Move to the next state
         state = next_state
 
-    # Print the total rewards
-    print('Total rewards:', total_rewards)
+    return total_rewards
 
 if __name__ == "__main__":
     test_data = load_test_data()
     env = create_environment(test_data)
     agent = create_agent(env)
     load_trained_model(agent)
-    test_agent(env, agent)
+
+    # Run the testing multiple times
+    num_runs = 100
+    rewards = []
+    for i in range(num_runs):
+        reward = test_agent(env, agent)
+        rewards.append(reward)
+
+    # Save the rewards
+    np.save('test_rewards.npy', rewards)
+
+    # Plot the rewards
+    plt.plot(rewards)
+    plt.xlabel('Run')
+    plt.ylabel('Total rewards')
+    plt.show()
