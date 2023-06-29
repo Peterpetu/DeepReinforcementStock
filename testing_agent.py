@@ -23,9 +23,36 @@ def load_trained_model(agent):
     agent.qnetwork_local.load_state_dict(torch.load('checkpoint.pth'))
     print("Trained model loaded.")
 
+def test_agent(env, agent):
+    # Initialize the total rewards
+    total_rewards = 0
+
+    # Reset the environment
+    state = env.reset()
+
+    done = False
+
+    # Run the testing loop
+    while not done:
+        # Select an action
+        action = agent.act(state)
+
+        # Take a step in the environment
+        next_state, reward, done, _ = env.step(action)
+
+        # Update the total rewards
+        total_rewards += reward
+
+        # Move to the next state
+        state = next_state
+
+    # Print the total rewards
+    print('Total rewards:', total_rewards)
+
 if __name__ == "__main__":
     test_data = load_test_data()
     env = create_environment(test_data)
     agent = create_agent(env)
     load_trained_model(agent)
-    print("Agent created and trained model loaded.")
+    test_agent(env, agent)
+
