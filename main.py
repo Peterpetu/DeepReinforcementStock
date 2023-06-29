@@ -24,7 +24,7 @@ def main():
     agent = DQNAgent(state_size=env.state_size, action_size=env.action_size, seed=0, hidden_layers=[64, 64])
 
     # Number of episodes to train for
-    n_episodes = 1
+    n_episodes = 1000
 
     # Initialize the list to store total rewards per episode
     total_rewards = []
