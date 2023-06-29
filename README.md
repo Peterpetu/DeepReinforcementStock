@@ -1,4 +1,4 @@
-# Deep Reinforcement Learning for Stock Trading
+# Deep Reinforcement Learning Agent for Stock Trading
 
 A simple Deep Reinforcement Learning for Stock Trading is a Python project that uses a Deep Q-Network (DQN) agent to predict stock prices and make trading decisions.
 
